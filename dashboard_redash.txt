@@ -1,0 +1,56 @@
+### profit_by_days & Country
+
+
+SELECT Country, InvoiceDate, SUM(UnitPrice * Quantity) AS profit_by_days_Country
+FROM default.retail
+WHERE Quantity > 0 
+GROUP BY InvoiceDate,
+         Country
+ORDER BY InvoiceDate,
+         Country
+
+
+### sales_product_TOP10
+
+SELECT StockCode, SUM(Quantity) AS sales_product
+FROM default.retail
+WHERE Quantity > 0
+GROUP BY StockCode
+ORDER BY sales_product DESC
+LIMIT 10
+
+
+### % profit_by_countries_TOP5
+
+WITH
+(SELECT SUM(UnitPrice * Quantity) 
+FROM default.retail
+WHERE Quantity > 0
+) AS profit_all_countries
+
+SELECT Country, SUM(UnitPrice * Quantity) AS profit_by_countries,  profit_by_countries/profit_all_countries*100 AS part_of_all_profit
+FROM default.retail
+WHERE Quantity > 0
+GROUP BY Country
+ORDER BY profit_by_countries DESC
+LIMIT 5
+
+
+### profit_by_countries without'United Kingdom
+
+SELECT Country, SUM(UnitPrice * Quantity) AS profit_by_countries
+FROM default.retail
+WHERE Quantity > 0 AND Country!= 'United Kingdom'
+GROUP BY Country
+ORDER BY profit_by_countries DESC
+LIMIT 10
+
+
+
+### profit_by_months
+
+SELECT  toStartOfMonth(InvoiceDate) AS months, SUM(UnitPrice * Quantity) AS profit_by_months
+FROM default.retail
+WHERE Quantity > 0
+GROUP BY months
+ORDER BY months
