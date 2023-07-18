@@ -1,13 +1,18 @@
-### profit_by_days & Country
+### avg_checks_by_months
 
-
-SELECT Country, InvoiceDate, SUM(UnitPrice * Quantity) AS profit_by_days_Country
+SELECT month, AVG(TotalPrice) AS AVG_TotalPrice
+FROM
+(
+SELECT InvoiceNo, SUM (Quantity*UnitPrice) AS TotalPrice, toStartOfMonth(InvoiceDate) AS month
 FROM default.retail
-WHERE Quantity > 0 
-GROUP BY InvoiceDate,
-         Country
-ORDER BY InvoiceDate,
-         Country
+WHERE Quantity > 0
+GROUP BY  InvoiceNo,
+           month
+)
+
+GROUP BY   month
+ORDER BY  AVG_TotalPrice DESC
+
 
 
 ### sales_product_TOP10
